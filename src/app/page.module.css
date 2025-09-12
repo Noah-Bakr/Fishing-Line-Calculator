@@ -61,7 +61,37 @@
   gap: 16px;
 }
 
-.ctas a {
+.squareWrapper {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  margin: 0 auto;
+  width: 600px;
+  height: 500px;
+  background: rgba(255,255,255,0.85);
+  border-radius: 16px;
+  box-shadow: 0 4px 24px rgba(0,0,0,0.12);
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  gap: 1.5rem;
+}
+
+.squareWrapper h1 {
+  color: #1a1a1a;
+  text-align: center;
+  padding: 0 1rem;
+}
+
+.squareWrapper p {
+  color: #333333;
+  text-align: center;
+  padding: 0 1rem;
+}
+
+.ctas a, .ctas button {
   appearance: none;
   border-radius: 128px;
   height: 48px;
@@ -80,13 +110,13 @@
   font-weight: 500;
 }
 
-a.primary {
+a.primary, button.primary {
   background: var(--foreground);
   color: var(--background);
   gap: 8px;
 }
 
-a.secondary {
+a.secondary, button.secondary {
   border-color: var(--gray-alpha-200);
   min-width: 158px;
 }
