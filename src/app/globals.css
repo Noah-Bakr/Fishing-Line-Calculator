@@ -18,10 +18,29 @@ body {
 
 body {
   color: var(--foreground);
-  background: var(--background);
+  background: var(--background); /* Default bg color */
   font-family: Arial, Helvetica, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  /* Background Image */
+  background-image: url('../../public/background.webp');
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center;
+}
+
+/* Overlay on bg to ensure readability */
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  background: rgba(255, 255, 255, 0.5);
+  pointer-events: none;
+  z-index: 0;
+}
+body > * {
+  position: relative;
+  z-index: 1;
 }
 
 * {
