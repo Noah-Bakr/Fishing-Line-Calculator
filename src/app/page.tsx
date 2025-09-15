@@ -4,6 +4,7 @@ import Image from "next/image";
 import styles from "./page.module.css";
 import { useRouter } from 'next/navigation'
 import { useState, useEffect } from 'react';
+import { SegmentedControl } from '@mantine/core';
 
 export default function Home() {
   const [mode, setMode] = useState<'single' | 'backing'>('single');
@@ -15,27 +16,56 @@ export default function Home() {
     mainLineLength: '',
   });
   const [result, setResult] = useState<string>('');
+  const [unitSystem, setUnitSystem] = useState<'metric' | 'imperial'>('metric');
+
+  // Conversion helpers
+  const mmToInches = (mm: number) => mm / 25.4;
+  const inchesToMm = (inches: number) => inches * 25.4;
+  const mToFeet = (m: number) => m * 3.28084;
+  const feetToM = (feet: number) => feet / 3.28084;
 
   // Calculate result automatically
   useEffect(() => {
     if (mode === 'single') {
       const { reelCapacityDiameter, reelCapacityLength, mainLineDiameter } = inputs;
       if (reelCapacityDiameter && reelCapacityLength && mainLineDiameter) {
-        const mainLineLength = (Number(reelCapacityLength) * Math.pow(Number(reelCapacityDiameter), 2)) / Math.pow(Number(mainLineDiameter), 2);
-        setResult(`You need ${Math.round(mainLineLength * 100) / 100} meters of main line.`);
+        let rcd = Number(reelCapacityDiameter);
+        let rcl = Number(reelCapacityLength);
+        let mld = Number(mainLineDiameter);
+        if (unitSystem === 'imperial') {
+          rcd = inchesToMm(rcd);
+          rcl = feetToM(rcl);
+          mld = inchesToMm(mld);
+        }
+        const mainLineLength = (rcl * Math.pow(rcd, 2)) / Math.pow(mld, 2);
+        const displayLength = unitSystem === 'imperial' ? mToFeet(mainLineLength) : mainLineLength;
+        setResult(`You need ${Math.round(displayLength * 100) / 100} ${unitSystem === 'imperial' ? 'feet' : 'meters'} of main line.`);
       } else {
         setResult('');
       }
     } else {
       const { reelCapacityDiameter, reelCapacityLength, backingDiameter, mainLineDiameter, mainLineLength } = inputs;
       if (reelCapacityDiameter && reelCapacityLength && backingDiameter && mainLineDiameter && mainLineLength) {
-        const backingLineLength = (Number(reelCapacityLength) * Math.pow(Number(reelCapacityDiameter), 2) - Number(mainLineLength) * Math.pow(Number(mainLineDiameter), 2)) / Math.pow(Number(backingDiameter), 2);
-        setResult(`You need ${Math.round(backingLineLength * 100) / 100} meters of backing line.`);
+        let rcd = Number(reelCapacityDiameter);
+        let rcl = Number(reelCapacityLength);
+        let bd = Number(backingDiameter);
+        let mld = Number(mainLineDiameter);
+        let mll = Number(mainLineLength);
+        if (unitSystem === 'imperial') {
+          rcd = inchesToMm(rcd);
+          rcl = feetToM(rcl);
+          bd = inchesToMm(bd);
+          mld = inchesToMm(mld);
+          mll = feetToM(mll);
+        }
+        const backingLineLength = (rcl * Math.pow(rcd, 2) - mll * Math.pow(mld, 2)) / Math.pow(bd, 2);
+        const displayLength = unitSystem === 'imperial' ? mToFeet(backingLineLength) : backingLineLength;
+        setResult(`You need ${Math.round(displayLength * 100) / 100} ${unitSystem === 'imperial' ? 'feet' : 'meters'} of backing line.`);
       } else {
         setResult('');
       }
     }
-  }, [inputs, mode]);
+  }, [inputs, mode, unitSystem]);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setInputs({ ...inputs, [e.target.name]: e.target.value });
@@ -47,6 +77,16 @@ export default function Home() {
         <div className={styles.squareWrapper}>
           <h1>Fishing Line Calculator</h1>
           <p>An online tool to calculate the amount of backing and/or main line required to spool a reel.</p>
+          <SegmentedControl
+            value={unitSystem}
+            onChange={(value) => setUnitSystem(value as 'metric' | 'imperial')}
+            data={[
+              { label: 'Metric (mm, m)', value: 'metric' },
+              { label: 'Imperial (in, ft)', value: 'imperial' },
+            ]}
+            fullWidth
+            style={{ marginBottom: '1rem' }}
+          />
           {result && <div className={styles.result}>{result}</div>}
           <button
             type="button"
@@ -58,7 +98,7 @@ export default function Home() {
           </button>
           <form className={styles.calculatorForm}>
             <label>
-              Reel Capacity Diameter (mm):
+              Reel Capacity Diameter ({unitSystem === 'imperial' ? 'inches' : 'mm'}):
               <input
                 type="number"
                 name="reelCapacityDiameter"
@@ -68,7 +108,7 @@ export default function Home() {
               />
             </label>
             <label>
-              Reel Capacity Length (m):
+              Reel Capacity Length ({unitSystem === 'imperial' ? 'feet' : 'm'}):
               <input
                 type="number"
                 name="reelCapacityLength"
@@ -80,7 +120,7 @@ export default function Home() {
             {mode === 'backing' && (
               <>
                 <label>
-                  Backing Diameter (mm):
+                  Backing Diameter ({unitSystem === 'imperial' ? 'inches' : 'mm'}):
                   <input
                     type="number"
                     name="backingDiameter"
@@ -90,7 +130,7 @@ export default function Home() {
                   />
                 </label>
                 <label>
-                  Main Line Diameter (mm):
+                  Main Line Diameter ({unitSystem === 'imperial' ? 'inches' : 'mm'}):
                   <input
                     type="number"
                     name="mainLineDiameter"
@@ -100,7 +140,7 @@ export default function Home() {
                   />
                 </label>
                 <label>
-                  Main Line Length (m):
+                  Main Line Length ({unitSystem === 'imperial' ? 'feet' : 'm'}):
                   <input
                     type="number"
                     name="mainLineLength"
@@ -113,7 +153,7 @@ export default function Home() {
             )}
             {mode === 'single' && (
               <label>
-                Main Line Diameter (mm):
+                Main Line Diameter ({unitSystem === 'imperial' ? 'inches' : 'mm'}):
                 <input
                   type="number"
                   name="mainLineDiameter"
