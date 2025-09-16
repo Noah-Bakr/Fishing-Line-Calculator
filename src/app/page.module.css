@@ -77,6 +77,7 @@
   left: 50%;
   transform: translate(-50%, -50%);
   gap: 1.5rem;
+  color: black; /* Text color */
 }
 
 .squareWrapper h1 {
