@@ -39,7 +39,11 @@ export default function Home() {
         }
         const mainLineLength = (rcl * Math.pow(rcd, 2)) / Math.pow(mld, 2);
         const displayLength = unitSystem === 'imperial' ? mToFeet(mainLineLength) : mainLineLength;
-        setResult(`You need ${Math.round(displayLength * 100) / 100} ${unitSystem === 'imperial' ? 'feet' : 'meters'} of main line.`);
+        const rounded = Math.round(displayLength * 100) / 100;
+        const unit = unitSystem === 'imperial'
+          ? (rounded === 1 ? 'foot' : 'feet')
+          : (rounded === 1 ? 'meter' : 'meters');
+        setResult(`You need ${rounded} ${unit} of main line.`);
       } else {
         setResult('');
       }
@@ -60,7 +64,11 @@ export default function Home() {
         }
         const backingLineLength = (rcl * Math.pow(rcd, 2) - mll * Math.pow(mld, 2)) / Math.pow(bd, 2);
         const displayLength = unitSystem === 'imperial' ? mToFeet(backingLineLength) : backingLineLength;
-        setResult(`You need ${Math.round(displayLength * 100) / 100} ${unitSystem === 'imperial' ? 'feet' : 'meters'} of backing line.`);
+        const rounded = Math.round(displayLength * 100) / 100;
+        const unit = unitSystem === 'imperial'
+          ? (rounded === 1 ? 'foot' : 'feet')
+          : (rounded === 1 ? 'meter' : 'meters');
+        setResult(`You need ${rounded} ${unit} of backing line.`);
       } else {
         setResult('');
       }
@@ -75,33 +83,36 @@ export default function Home() {
     <div className={styles.page}>
       <main className={styles.main}>
         <div className={styles.squareWrapper}>
-          <h1>Fishing Line Calculator</h1>
-          <p>An online tool to calculate the amount of backing and/or main line required to spool a reel.</p>
-          <SegmentedControl
-            value={mode}
-            onChange={(value) => setMode(value as 'single' | 'backing')}
-            data={[
-              { label: 'Single Line', value: 'single' },
-              { label: 'Backing Line', value: 'backing' },
-            ]}
-            fullWidth
-            variant="filled"
-            radius="md"
-            style={{ marginBottom: '1rem' }}
-          />
-          <SegmentedControl
-            value={unitSystem}
-            onChange={(value) => setUnitSystem(value as 'metric' | 'imperial')}
-            data={[
-              { label: 'Metric (mm, m)', value: 'metric' },
-              { label: 'Imperial (in, ft)', value: 'imperial' },
-            ]}
-            fullWidth
-            variant="filled"
-            radius="md"
-            style={{ marginBottom: '1rem' }}
-          />
-          {result && <div className={styles.result}>{result}</div>}
+          <div className={styles.squareWrapperHeading}>
+            <h1>Fishing Line Calculator</h1>
+            <p>An online tool to calculate the amount of backing and/or main line required to spool a reel.</p>
+          </div>
+          <div className={styles.controls}>
+            <SegmentedControl
+              value={mode}
+              onChange={(value) => setMode(value as 'single' | 'backing')}
+              data={[
+                { label: 'Single Line', value: 'single' },
+                { label: 'Backing Line', value: 'backing' },
+              ]}
+              fullWidth
+              style={{ marginBottom: '1rem', border: '2px solid #ccc' }}
+            />
+            <SegmentedControl
+              value={unitSystem}
+              onChange={(value) => setUnitSystem(value as 'metric' | 'imperial')}
+              data={[
+                { label: 'Metric (mm, m)', value: 'metric' },
+                { label: 'Imperial (in, ft)', value: 'imperial' },
+              ]}
+              fullWidth
+              variant="filled"
+              radius="md"
+              style={{ marginBottom: '1rem' }}
+            />
+          </div>
+          <div className={styles.result}>{result ? result : "Please enter your inputs below to see the result."}</div>
+
           <form className={styles.calculatorForm}>
             <label>
               Reel Capacity Diameter ({unitSystem === 'imperial' ? 'inches' : 'mm'}):
@@ -188,14 +199,14 @@ export default function Home() {
             />
             Deploy now
           </a> */}
-          <a
+          {/* <a
             className={styles.primary}
             href=""
             target="_blank"
             rel="noopener noreferrer"
           >
             Backing Line + Main Line
-          </a>
+          </a> */}
           {/* <a
             href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
             target="_blank"
@@ -204,17 +215,17 @@ export default function Home() {
           >
             Read our docs
           </a> */}
-          <a
+          {/* <a
             href=""
             target="_blank"
             rel="noopener noreferrer"
             className={styles.secondary}
           >
             Single Line (Main Line Only)
-          </a>
+          </a> */}
         </div>
       </main>
-      <footer className={styles.footer}>
+      {/* <footer className={styles.footer}>
         <a
           href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
           target="_blank"
@@ -257,7 +268,7 @@ export default function Home() {
           />
           Go to nextjs.org →
         </a>
-      </footer>
+      </footer> */}
     </div>
   );
 }
