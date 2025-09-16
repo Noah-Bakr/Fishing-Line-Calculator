@@ -78,6 +78,18 @@ export default function Home() {
           <h1>Fishing Line Calculator</h1>
           <p>An online tool to calculate the amount of backing and/or main line required to spool a reel.</p>
           <SegmentedControl
+            value={mode}
+            onChange={(value) => setMode(value as 'single' | 'backing')}
+            data={[
+              { label: 'Single Line', value: 'single' },
+              { label: 'Backing Line', value: 'backing' },
+            ]}
+            fullWidth
+            variant="filled"
+            radius="md"
+            style={{ marginBottom: '1rem' }}
+          />
+          <SegmentedControl
             value={unitSystem}
             onChange={(value) => setUnitSystem(value as 'metric' | 'imperial')}
             data={[
@@ -85,17 +97,11 @@ export default function Home() {
               { label: 'Imperial (in, ft)', value: 'imperial' },
             ]}
             fullWidth
+            variant="filled"
+            radius="md"
             style={{ marginBottom: '1rem' }}
           />
           {result && <div className={styles.result}>{result}</div>}
-          <button
-            type="button"
-            className={styles.toggleBtn}
-            onClick={() => setMode(mode === 'single' ? 'backing' : 'single')}
-            style={{ marginBottom: '1rem' }}
-          >
-            Switch to {mode === 'single' ? 'Backing Line' : 'Single Line'} Calculator
-          </button>
           <form className={styles.calculatorForm}>
             <label>
               Reel Capacity Diameter ({unitSystem === 'imperial' ? 'inches' : 'mm'}):
