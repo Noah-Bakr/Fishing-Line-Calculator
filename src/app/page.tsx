@@ -1,8 +1,6 @@
 "use client"
 
-import Image from "next/image";
 import styles from "./page.module.css";
-import { useRouter } from 'next/navigation'
 import { useState, useEffect } from 'react';
 import { SegmentedControl } from '@mantine/core';
 
@@ -19,7 +17,7 @@ export default function Home() {
   const [unitSystem, setUnitSystem] = useState<'metric' | 'imperial'>('metric');
 
   // Conversion helpers
-  const mmToInches = (mm: number) => mm / 25.4;
+  // const mmToInches = (mm: number) => mm / 25.4;
   const inchesToMm = (inches: number) => inches * 25.4;
   const mToFeet = (m: number) => m * 3.28084;
   const feetToM = (feet: number) => feet / 3.28084;
@@ -66,9 +64,13 @@ export default function Home() {
         const displayLength = unitSystem === 'imperial' ? mToFeet(backingLineLength) : backingLineLength;
         const rounded = Math.round(displayLength * 100) / 100;
         const unit = unitSystem === 'imperial'
-          ? (rounded === 1 ? 'foot' : 'feet')
-          : (rounded === 1 ? 'meter' : 'meters');
-        setResult(`You need ${rounded} ${unit} of backing line.`);
+          ? (Math.abs(rounded) === 1 ? 'foot' : 'feet')
+          : (Math.abs(rounded) === 1 ? 'meter' : 'meters');
+        if (rounded < 0) {
+          setResult(`The main line length exceeds the capacity of the reel by ${Math.abs(rounded)} ${unit}.`);
+        } else {
+          setResult(`You need ${rounded} ${unit} of backing line.`);
+        }
       } else {
         setResult('');
       }
@@ -96,7 +98,7 @@ export default function Home() {
                 { label: 'Backing Line', value: 'backing' },
               ]}
               fullWidth
-              style={{ marginBottom: '1rem', border: '2px solid #ccc' }}
+              style={{ marginBottom: '1rem' }}
             />
             <SegmentedControl
               value={unitSystem}
@@ -106,12 +108,12 @@ export default function Home() {
                 { label: 'Imperial (in, ft)', value: 'imperial' },
               ]}
               fullWidth
-              variant="filled"
-              radius="md"
               style={{ marginBottom: '1rem' }}
             />
           </div>
-          <div className={styles.result}>{result ? result : "Please enter your inputs below to see the result."}</div>
+          <div className={styles.result}>
+            <p>{result ? result : "Please enter your inputs below to see the result."}</p>
+          </div>
 
           <form className={styles.calculatorForm}>
             <label>
