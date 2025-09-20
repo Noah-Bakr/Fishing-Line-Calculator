@@ -233,11 +233,12 @@ a.secondary, button.secondary {
     max-width: 94vw;
     min-width: 0;
     height: auto;
-    min-height: 420px;
+    min-height: unset;
+    box-sizing: border-box;
     padding: 1.2rem 0.5rem 1.2rem 0.5rem;
     border-radius: 10px;
     gap: 1rem;
-    margin: 3vw auto;
+    margin: 5vw auto 5vw auto;
   }
   .squareWrapperHeading h1 {
     font-size: 1.3rem;
