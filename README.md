@@ -4,7 +4,7 @@
 
 Fishing Line Calculator is a web application that helps anglers calculate the amount of backing and/or main line required to spool a fishing reel. It supports both metric and imperial units, is mobile-friendly, and features a modern, accessible UI.
 
-![Screenshot](public/background.webp)
+![Screenshot](public/home.png)
 
 ## Features
 
