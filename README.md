@@ -31,16 +31,16 @@ cd Fishing-Line-Calculator
 
 ### 2. Install Dependencies
 
-Make sure you have **Node.js (v18+)** and npm installed. Then run:
+Make sure you have **Node.js (v18+)** and **Yarn** installed. Then run:
 
 ```bash
-npm install
+yarn install
 ```
 
 ### 3. Start the Development Server
 
 ```bash
-npm run dev
+yarn dev
 ```
 
 Open [http://localhost:3000](http://localhost:3000) in your browser to use the calculator.
